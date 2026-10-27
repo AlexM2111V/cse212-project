@@ -9,11 +9,20 @@ public static class Arrays
     public static double[] MultiplesOf(double number, int length)
     {
         // TODO Problem 1 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // Plan:
+        // 1. Create a new array of doubles with 'length' boxes to hold the results.
+        // 2. Loop through every position (index) in the array, from 0 up to (length - 1).
+        // 3. At each position, calculate the multiple as: number * (index + 1).
+        // 4. Store that value in the array at the current position.
+        // 5. After the loop finishes, return the filled array.
 
-        return []; // replace this return statement with your own
+        var results = new double[length];
+        for (var i = 0; i < length; i++)
+        {
+            results[i] = number * (i + 1);
+        }
+
+        return results; // replace this return statement with your own
     }
 
     /// <summary>
@@ -26,8 +35,15 @@ public static class Arrays
     public static void RotateListRight(List<int> data, int amount)
     {
         // TODO Problem 2 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // Plan:
+        // 1. Find where the last 'amount' numbers start: startIndex = data.Count - amount.
+        // 2. Copy the numbers from startIndex to the end into a separate list, so they aren't lost.
+        // 3. Remove those same numbers from 'data'.
+        // 4. Insert the copied numbers at the beginning of 'data' (index 0), keeping their order.
+        
+        var startIndex = data.Count - amount;
+        var lastItems = data.GetRange(startIndex, amount);
+        data.RemoveRange(startIndex, amount);
+        data.InsertRange(0, lastItems);
     }
 }
