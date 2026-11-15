@@ -32,7 +32,8 @@ public class Maze
     /// </summary>
     public void MoveLeft()
     {
-        // FILL IN CODE
+        EnsureCanMove(0);
+        _currX--;
     }
 
     /// <summary>
@@ -41,7 +42,8 @@ public class Maze
     /// </summary>
     public void MoveRight()
     {
-        // FILL IN CODE
+        EnsureCanMove(1);
+        _currX++;
     }
 
     /// <summary>
@@ -50,7 +52,8 @@ public class Maze
     /// </summary>
     public void MoveUp()
     {
-        // FILL IN CODE
+        EnsureCanMove(2);
+        _currY--;
     }
 
     /// <summary>
@@ -59,7 +62,18 @@ public class Maze
     /// </summary>
     public void MoveDown()
     {
-        // FILL IN CODE
+        EnsureCanMove(3);
+        _currY++;
+    }
+
+    /// <summary>
+    /// Throws if the given direction (0=left, 1=right, 2=up, 3=down)
+    /// is blocked by a wall at the current location.
+    /// </summary>
+    private void EnsureCanMove(int direction)
+    {
+        if (!_mazeMap[(_currX, _currY)][direction])
+            throw new InvalidOperationException("Can't go that way!");
     }
 
     public string GetStatus()

@@ -21,7 +21,7 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        var seen = new HashSet<string>();
+        var seen = new HashSet<int>();
         var pairs = new List<string>();
 
         foreach (var word in words)
@@ -30,13 +30,15 @@ public static class SetsAndMaps
             if (word[0] == word[1])
                 continue;
 
-            var reversed = $"{word[1]}{word[0]}";
+            // Encode each 2-letter word as a number so no new strings are created per word
+            int key = word[0] << 16 | word[1];
+            int reversedKey = word[1] << 16 | word[0];
 
             // If the reverse was already seen, we found a symmetric pair
-            if (seen.Contains(reversed))
-                pairs.Add($"{word} & {reversed}");
+            if (seen.Contains(reversedKey))
+                pairs.Add($"{word} & {word[1]}{word[0]}");
             else
-                seen.Add(word);
+                seen.Add(key);
         }
 
         return pairs.ToArray();
@@ -54,7 +56,7 @@ public static class SetsAndMaps
     /// <param name="filename">The name of the file to read</param>
     /// <returns>fixed array of divisors</returns>
     public static Dictionary<string, int> SummarizeDegrees(string filename)
-      {
+    {
         var degrees = new Dictionary<string, int>();
         foreach (var line in File.ReadLines(filename))
         {
@@ -87,7 +89,7 @@ public static class SetsAndMaps
     /// using the [] notation.
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
-     {
+    {
         // Ignore case and spaces
         word1 = word1.ToLower().Replace(" ", "");
         word2 = word2.ToLower().Replace(" ", "");
@@ -145,11 +147,23 @@ public static class SetsAndMaps
 
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
 
-        // TODO Problem 5:
-        // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
-        // on those classes so that the call to Deserialize above works properly.
-        // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
-        // 3. Return an array of these string descriptions.
-        return [];
+        var summaries = new List<string>();
+
+        if (featureCollection == null)
+            return [];
+
+        foreach (var feature in featureCollection.Features)
+        {
+            var place = feature.Properties.Place;
+            var mag = feature.Properties.Mag;
+
+            // Skip earthquakes missing a place or magnitude
+            if (place == null || mag == null)
+                continue;
+
+            summaries.Add($"{place} - Mag {mag}");
+        }
+
+        return summaries.ToArray();
     }
 }
